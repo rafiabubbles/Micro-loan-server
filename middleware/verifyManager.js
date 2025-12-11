@@ -2,12 +2,12 @@ const verifyToken = require("./verifyToken");
 
 const verifyManager = (req, res, next) => {
   verifyToken(req, res, () => {
-    console.log("Decoded JWT:", req.user); // ✅ add this line
+    console.log("Decoded JWT:", req.user); 
     if (req.user.role !== "manager") {
-      console.log("Forbidden: User is not manager"); // ✅ add this
+      console.log("Forbidden: User is not manager"); 
       return res.status(403).json({ message: "Forbidden: Manager only" });
     }
-    console.log("User is manager, proceeding"); // ✅ add this
+    console.log("User is manager, proceeding"); 
     next();
   });
 };
