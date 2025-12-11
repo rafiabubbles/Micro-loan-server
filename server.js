@@ -19,10 +19,12 @@ app.use(cookieParser());
 const authRoutes = require("./routes/auth");
 const loanRoutes = require("./routes/loan");
 const loanApplicationRoutes = require("./routes/loanApplication");
+const userRoutes = require("./routes/user"); 
 
 app.use("/api/auth", authRoutes);
 app.use("/api/loans", loanRoutes);
 app.use("/api/loan-applications", loanApplicationRoutes);
+app.use("/api/user", userRoutes);
 
 // Test route
 app.get("/", (req, res) => res.send("Server running"));

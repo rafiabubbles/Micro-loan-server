@@ -4,13 +4,25 @@ const verifyToken = require("../middleware/verifyToken");
 const verifyManager = require("../middleware/verifyManager");
 
 // Apply for loan (borrower)
+// router.post("/", verifyToken, async (req, res) => {
+//   try {
+//     const newApp = new LoanApplication({ ...req.body, userId: req.user.id });
+//     await newApp.save();
+//     res.status(201).json(newApp);
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
+
 router.post("/", verifyToken, async (req, res) => {
   try {
-    const newApp = new LoanApplication({ ...req.body, userId: req.user.id });
+    const newApp = new LoanApplication({ ...req.body, userId: req.user.id,loanId: req.body.loanId });
     await newApp.save();
     res.status(201).json(newApp);
-  } catch (err) {
-    res.status(500).json(err);
+   } catch (err) {
+    console.error("Loan Application Submission Error:", err);
+    // এরর হলে পরিষ্কার মেসেজ দিন
+    res.status(500).json({ message: "Failed to submit loan application.", error: err.message });
   }
 });
 
