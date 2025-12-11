@@ -1,24 +1,41 @@
 const LoanApplication = require("../models/LoanApplication");
+const User = require("../models/User");
 
-// Create new loan application
 exports.applyLoan = async (req, res) => {
-  try {
-    const { loanId, amount, documents } = req.body;
+    try {
+      // 💡 req.body থেকে সমস্ত প্রয়োজনীয় ডেটা ডিস্ট্রাকচার করুন
+      const applicationData = req.body;
+      const { loanId, userEmail } = applicationData; 
+      
+      // ⚠️ req.user.id ব্যবহার করে সেভ করার দরকার নেই, কারণ আপনি front-end এ userEmail পাঠাচ্ছেন
+  
+      const newApplication = new LoanApplication({
+        // user: req.user.id, // ⚠️ এই লাইনটি আর প্রয়োজন নেই
+        // loan: loanId, // ⚠️ এই লাইনটি আর প্রয়োজন নেই
+        ...applicationData // 💡 সমস্ত ডেটা একবারে সেভ করুন
+  
+      });
+  
+      await newApplication.save();
+      
+      // 💡 Borrower এর User ডকুমেন্ট আপডেট করা (My Loans দেখানোর জন্য)
+      const updatedUser = await User.findOneAndUpdate(
+          { email: userEmail },
+          { $push: { loanApplications: newApplication._id } }, 
+          { new: true }
+      );
+      
+      if (!updatedUser) {
+           console.warn(`User with email ${userEmail} not found in MongoDB. Application submitted but user profile not updated.`);
+      }
+  
+      res.status(201).json({ message: "Loan application submitted", newApplication });
+    } catch (error) {
+      console.error("Loan Submission Error:", error);
+      res.status(500).json({ message: "Error submitting loan application", error: error.message });
+    }
+  };
 
-    const newApplication = new LoanApplication({
-      user: req.user.id,
-      loan: loanId,
-      amount,
-      documents
-    });
-
-    await newApplication.save();
-
-    res.status(201).json({ message: "Loan application submitted", newApplication });
-  } catch (error) {
-    res.status(500).json({ message: "Error submitting loan application", error });
-  }
-};
 
 // Get all applications (Admin or Manager)
 exports.getAllApplications = async (req, res) => {
