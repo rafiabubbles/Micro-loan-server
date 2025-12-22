@@ -105,6 +105,6 @@ async function run() {
     // Keep connection alive
   }
 }
-run().catch(console.dir)
+run().catch(console.dir);
 
 app.listen(port, () => console.log(`🚀 Server on port ${port}`));
