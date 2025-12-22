@@ -100,7 +100,7 @@ async function run() {
       res.send(await applicationCollection.find().toArray());
     });
 
-    console.log("🎯 Connect to MongoDB");
+    console.log("🎯 Connected to MongoDB");
   } finally {
     // Keep connection alive
   }
