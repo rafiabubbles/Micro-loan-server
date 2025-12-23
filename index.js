@@ -25,7 +25,13 @@ try {
 }
 
 // --- 2. Middleware ---
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://loan-link-client-aky6.vercel.app" 
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 // --- 3. MongoDB Connection ---
